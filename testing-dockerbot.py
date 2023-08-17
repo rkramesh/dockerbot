@@ -44,8 +44,19 @@ def search_string_in_file(file_name, string_to_search):
     return list_of_results
 
 def handle(msg):
-    chat_id = msg['chat']['id'] 
-    command = msg['text']
+    content_type, chat_type, chat_id = telepot.glance(msg)
+    print(content_type,chat_type,chat_id)
+
+    #chat_id = msg['chat']['id']
+    if content_type == 'video':
+       command = msg['video']['file_id'] 
+       bot.sendMessage(chat_id,msg)
+       bot.download_file(msg['video']['file_id'],'/media/D/test.mp4')
+
+
+    elif content_type == 'text':
+       command = msg['text']
+    
     if str(chat_id) not in os.getenv('ALLOWED_IDS'):
         bot.sendPhoto(chat_id,"https://github.com/t0mer/dockerbot/raw/master/No-Trespassing.gif")
         return ""
@@ -54,9 +65,8 @@ def handle(msg):
 
    # print ('Got command: %s')%command
     print ('Got command: {}'.format(command))
-    if command == '/uptime': #[ Get Up Time ]#
-        x = subprocess.check_output(['uptime'])
-        bot.sendMessage(chat_id,x)
+    if command == '/time': #[ Get Local Time ]#
+        bot.sendMessage(chat_id, str(datetime.datetime.now()))
     elif command == '/speed': #[ Run Speedtest ]#
         x = subprocess.check_output(['speedtest-cli','--share'])
         photo = re.search("(?P<url>https?://[^\s]+)", x).group("url")
@@ -77,6 +87,7 @@ def handle(msg):
     elif command.startswith ('/shell'): #[Run Shell commands]#
         command = " ".join(command.split()[1:])
         bot.sendMessage(chat_id,'Running {}..'.format(command))
+        #cmd = 'echo pwd  > /media/rkpipe'
         cmd = 'echo {} > /media/rkpipe'.format(command)
         x = subprocess.check_output(cmd,shell=True)
         op = subprocess.check_output(["cat",  "/media/pipe-output.txt"])
@@ -132,7 +143,8 @@ def handle(msg):
             x = str(e)
             bot.sendMessage(chat_id,x)
     elif command == '/?' or command=="/start":
-        array = search_string_in_file('/opt/dockerbot/dockerbot.py', "/")
+        #array = search_string_in_file('/opt/dockerbot/dockerbot.py', "/")
+        array = search_string_in_file('dockerbot.py', "/")
         s = "Command List:\n"
         for val in array:
             if ")" not in val:

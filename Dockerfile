@@ -1,10 +1,12 @@
 FROM ubuntu:18.04
 
-LABEL maintainer="tomer.klein@gmail.com"
+LABEL maintainer="rkramesh1988@gmail.com"
 RUN apt update -yqq && \
     apt install -yqq python-pip && \
     apt install -yqq curl && \
     apt install -yqq speedtest-cli && \
+    apt install -yqq jq && \
+    apt install -yqq bash && \
     apt install -yqq wget
 
 RUN pip install docker --no-cache-dir && \
@@ -15,7 +17,8 @@ RUN wget https://raw.githubusercontent.com/sivel/speedtest-cli/v2.1.3/speedtest.
 RUN mkdir /opt/dockerbot
 
 COPY dockerbot.py /opt/dockerbot
+COPY docker_events.sh /opt/dockerbot
 
 ENV API_KEY ""
+ENTRYPOINT ["./entrypoint.sh"]
 
-ENTRYPOINT ["/usr/bin/python", "/opt/dockerbot/dockerbot.py"]
