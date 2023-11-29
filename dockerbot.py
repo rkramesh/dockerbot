@@ -83,6 +83,9 @@ def handle(msg):
         bot.sendMessage(chat_id,op)
     elif command == '/stat': #[ Get bot Status ]#
         bot.sendMessage(chat_id,'Number five is alive!')
+    elif command == '/m3u': #[ Get M3u ]#
+        x = subprocess.check_output(['tail','-4', '/media/media.m3u'])
+        bot.sendMessage(chat_id,x)
     elif command == '/list_containers':
         try:
             client = client = docker.from_env()

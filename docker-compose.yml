@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   dockerbot:
-    image: rkramesh/dockerbot:shellv3
+    image: rkramesh/dockerbot:m3u
       #    image: techblog/dockerbot
     container_name: dockerbot1
     network_mode: host

@@ -18,7 +18,8 @@ RUN mkdir /opt/dockerbot
 
 COPY dockerbot.py /opt/dockerbot
 COPY docker_events.sh /opt/dockerbot
-
+COPY ./entrypoint.sh /
+RUN chmod +x /entrypoint.sh
 ENV API_KEY ""
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 
